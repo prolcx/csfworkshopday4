@@ -120,5 +120,8 @@
       }
     }
   },
-  "defaultProject": "workshopday03"
+  "defaultProject": "workshopday03",
+  "cli": {
+    "analytics": false
+  }
 }
