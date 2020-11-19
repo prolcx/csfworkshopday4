@@ -1,1 +1,69 @@
-<app-registration></app-registration>
+<mat-toolbar color="primary">
+    <mat-toolbar-row>
+        <span>My Todo App</span>
+    </mat-toolbar-row>
+</mat-toolbar>
+
+<div>
+    <div>
+        <div>
+            <form [formGroup]="form" (ngSubmit)="addTodo()">
+                <mat-divider></mat-divider>
+                <!-- start : add todo -->
+                <mat-card>
+                    <mat-card-header>
+                        <mat-card-title><h2>Add ToDo 📝 </h2></mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <mat-form-field>
+                            <input matInput formControlName="task">
+                        </mat-form-field>
+
+                        <div>
+                            <label>Priority: </label>
+                            <mat-radio-group arial-label="Select an option" formControlName="priority">
+                                <mat-radio-button value="1">Low &nbsp;</mat-radio-button>
+                                <mat-radio-button value="2">Medium &nbsp;</mat-radio-button>
+                                <mat-radio-button value="3">High &nbsp;</mat-radio-button>
+                            </mat-radio-group>
+                            <div *ngIf="form.get('priority').invalid && (form.get('priority').dirty || form.get('priority').touched)">
+                                <mat-error *ngIf="form.get('priority').invalid">{{getPriorityErrorMessage()}}</mat-error>
+                            </div>
+                        </div>
+                        <mat-form-field>
+                            <input matInput [matDatepicker]="picker" formControlName="dueDate" [min]="tomorrow">
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+                        <br>
+                        <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">Add</button>
+                    </mat-card-content>
+                </mat-card>
+                <!-- end : add todo -->
+                <mat-divider></mat-divider>
+                <!-- list of tasks-->
+                <mat-card>
+                    <mat-card-header>
+                        <mat-card-title><h2>List of ToDos 📝 </h2></mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <mat-list role="list">
+                            <mat-list-item *ngFor="let todo of form.get('todos')?.controls; let i = index" [formGroup]="todo">
+                                <mat-checkbox formControlName="task" (change)="updateStatus(i)">
+                                    <span [ngClass]="{'todo-complete': todoValues[i].status}">{{todoValues[i].task}} - {{todoValues[i].dueDate | date}} &nbsp;</span>
+                                </mat-checkbox>
+                                <button type="button" mat-icon-button color="warn" (click)="onDelete(i, todoValues[i].taskId)">
+                                    <span class="material-icons">delete</span>
+                                </button>
+                                &nbsp;
+                                <button type="button" mat-icon-button color="accent" (click)="onEdit(i, todoValues[i].taskId)">
+                                    <span class="material-icons">edit</span>
+                                </button>
+                            </mat-list-item>
+                        </mat-list>
+                    </mat-card-content>
+                </mat-card>
+            </form>
+        </div>
+    </div>
+</div>
